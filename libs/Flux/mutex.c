@@ -27,6 +27,7 @@ for(i=0;i<mutex_nb;i++){
   status=pthread_mutex_destroy(mutexes+i);
   if(status!=0) return -1;
 	}
+  free(mutexes);
 return 0;
 }
 
