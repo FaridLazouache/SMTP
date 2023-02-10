@@ -141,30 +141,33 @@ return id;
 // Fonction de gestion des courriels recus
 
 void gestionCourriel(struct courriel *donnees,void *supplement){
-#ifdef DEVERMINE
-afficheCourriel(stdout,donnees,0);
-#endif
-char *id=adresseVersUtilisateur(donnees->destinataire);
-if(id==NULL){
-  ecritureJournal(JOURNIV_ALERTE,JOURNAL_INCONNU,donnees->destinataire);
-  return;
-  }
-P(MUTEX_COMPTEUR);
-messages++;
-V(MUTEX_COMPTEUR);
-char fichier[MAX_CHEMIN];
-sprintf(fichier,"%s/%s/%s/%ld_%010d_%010ld",dossier,id,MAILDIR_TMP,time(NULL),pid,messages);
-FILE *f=fopen(fichier,"w");
-if(f==NULL){
-  ecritureJournal(JOURNIV_ERREUR,JOURNAL_OUVERTURE,fichier);
-  return;
-  }
-int nb=fwrite(donnees->corps,donnees->taille,1,f);
-if(nb!=1){
-  ecritureJournal(JOURNIV_ERREUR,JOURNAL_ECRITURE,fichier);
-  return;
-  }
-fclose(f);
+  #ifdef DEVERMINE
+  afficheCourriel(stdout,donnees,0);
+  #endif
+  char *id=adresseVersUtilisateur(donnees->destinataire);
+  if(id==NULL){
+    ecritureJournal(JOURNIV_ALERTE,JOURNAL_INCONNU,donnees->destinataire);
+    return;
+    }
+  P(MUTEX_COMPTEUR);
+  messages++;
+  V(MUTEX_COMPTEUR);
+  char fichier[MAX_CHEMIN];
+  sprintf(fichier,"%s/%s/%s/%ld_%010d_%010ld",dossier,id,MAILDIR_TMP,time(NULL),pid,messages);
+  FILE *f=fopen(fichier,"w");
+  if(f==NULL){
+    ecritureJournal(JOURNIV_ERREUR,JOURNAL_OUVERTURE,fichier);
+    return;
+    }
+  int nb=fwrite(donnees->corps,donnees->taille,1,f);
+  if(nb!=1){
+    ecritureJournal(JOURNIV_ERREUR,JOURNAL_ECRITURE,fichier);
+    return;
+    }
+  fclose(f);
+  char newfile[MAX_CHEMIN];
+  sprintf(newfile,"%s/%s/%s/%ld_%010d_%010ld",dossier,id,MAILDIR_NEW,time(NULL),pid,messages);
+  rename(fichier, newfile);
 }
 
 // Fonctions de gestion des clients SMTP
