@@ -17,10 +17,12 @@
 
 #define	JOURNIV_INFO		10
 #define	JOURNIV_DEVERMINE	20
+#define JOURNIV_ERREUR 0
 
 #define JOURNAL_DEBUT	"Serveur SMTP d'envoi"
 #define JOURNAL_FIN	"Sortie du serveur"
 #define JOURNAL_MXHS	"Serveur MX non joignable (%s)"
+#define JOURNAL_ERREUR "\nErreur de connexion au serveur\n"
 
 // Fonction de gestion des courriels recus
 
@@ -53,6 +55,11 @@ while(*p!=NULL){
   printf("Serveur : %s\n",*p);
 #endif
   int ss=connexionServeur(*p,SMTP_PORT_DEFAULT);
+  if(ss == -1)
+  {
+    ecritureJournal(JOURNIV_ERREUR, JOURNAL_ERREUR);
+    continue;
+  }
   FILE *dialogue=fdopen(ss,"a+");
   if(dialogue==NULL){
     perror("gestionCourriel.fdopen");
