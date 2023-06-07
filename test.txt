@@ -1,0 +1,10 @@
+EHLO toto
+MAIL FROM: root@miserable.site
+RCPT TO: farid.lazouache@polytech-lille.net
+DATA
+SUBJECT: test
+
+CECI EST UN TEST
+.
+QUIT
+
