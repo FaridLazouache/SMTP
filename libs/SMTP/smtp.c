@@ -222,7 +222,7 @@ static int dialogue_DATA(FILE *dialogue,char *corps,char *erreur,int taille)
 {
 	int code;
 // FAIRE APPEL A DIALOGUE_GENERIQUE POUR ENVOYER DATA AVANT D'ENVOYER LE CORPS ET LE POINT
-	code = dialogue_generique(dialogue, "DATA", NULL, CONTINUE_DATA_CODE, erreur, taille);
+	code = dialogue_generique(dialogue, "DATA", "", CONTINUE_DATA_CODE, erreur, taille);
 	#ifdef DEVERMINE
 		printf("\nCODE = %d\n", code);
 	#endif
@@ -230,6 +230,7 @@ static int dialogue_DATA(FILE *dialogue,char *corps,char *erreur,int taille)
 	{
 		if(fprintf(dialogue,corps)<0) return -1;
 		if(fprintf(dialogue,".\r\n")<0) return -1;
+		//dialogue_generique(dialogue, NULL, NULL, NULL, erreur, taille);
 		return retour_generique(dialogue,SUCCES_DATA_CODE,erreur,taille);
 	}
 	else
