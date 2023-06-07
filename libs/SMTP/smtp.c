@@ -218,12 +218,22 @@ static inline int dialogue_RCPT(FILE *dialogue,char *destinataire,char *erreur,i
 return dialogue_generique(dialogue,"RCPT TO:",destinataire,SUCCES_RCPT_CODE,erreur,taille);
 }
 
-static int dialogue_DATA(FILE *dialogue,char *corps,char *erreur,int taille){
-if(fprintf(dialogue,"DATA\r\n")<0) return -1;
+static int dialogue_DATA(FILE *dialogue,char *corps,char *erreur,int taille)
+{
+	int code;
 // FAIRE APPEL A DIALOGUE_GENERIQUE POUR ENVOYER DATA AVANT D'ENVOYER LE CORPS ET LE POINT
-if(fprintf(dialogue,corps)<0) return -1;
-if(fprintf(dialogue,".\r\n")<0) return -1;
-return retour_generique(dialogue,SUCCES_DATA_CODE,erreur,taille);
+	code = dialogue_generique(dialogue, "DATA", NULL, CONTINUE_DATA_CODE, erreur, taille);
+	#ifdef DEVERMINE
+		printf("\nCODE = %d\n", code);
+	#endif
+	if(!code)
+	{
+		if(fprintf(dialogue,corps)<0) return -1;
+		if(fprintf(dialogue,".\r\n")<0) return -1;
+		return retour_generique(dialogue,SUCCES_DATA_CODE,erreur,taille);
+	}
+	else
+		return -1;
 }
 
 int SMTP_dialogue(FILE *dialogue,struct courriel *courriel,char *erreur,int taille){
