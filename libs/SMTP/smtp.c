@@ -167,15 +167,26 @@ return 0;
 
 // Fonctions de communication avec un serveur SMTP
 
-static int retour_generique(FILE *dialogue,int succes,char *erreur,int taille){
-char ligne[MAX_LIGNE];
-if(fgets(ligne,MAX_LIGNE,dialogue)==NULL) return -1;
-ligne[MAX_LIGNE-1]='\0';
-int code;
-int statut=sscanf(ligne,"%d",&code);
-if(statut==1 && code!=succes) strncpy(erreur,ligne,taille-1);
-return (statut==1 && code==succes)?0:-1;
+static int retour_generique(FILE *dialogue,int succes,char *erreur,int taille)
+{
+	char ligne[MAX_LIGNE];
+	//while(fgets(ligne, MAX_LIGNE, dialogue) != '-') // changed fgets to consider hyphen
+	//{
+		if(fgets(ligne,MAX_LIGNE,dialogue)==NULL) return -1;
+		ligne[MAX_LIGNE-1]='\0';
+		
+		int code;
+		int statut=sscanf(ligne,"%d",&code);
+		#ifdef DEVERMINE
+			printf("code = %d\n", code);
+			printf("statut = %d\n", statut);
+			printf("succes = %d\n", succes);
+		#endif
+		if(statut==1 && code!=succes) strncpy(erreur,ligne,taille-1);
+		return (statut==1 && code==succes)?0:-1;
+	//}
 }
+
 
 static int dialogue_generique(FILE *dialogue,char *commande,char *arguments,int succes,char *erreur,int taille){
 char envoi[MAX_LIGNE];
@@ -186,8 +197,9 @@ if(commande!=NULL){
 return retour_generique(dialogue,succes,erreur,taille);
 }
 
-static inline int dialogue_connexion(FILE *dialogue,char *erreur,int taille){
-return dialogue_generique(dialogue,NULL,NULL,ACCUEIL_CODE,erreur,taille);
+static inline int dialogue_connexion(FILE *dialogue,char *erreur,int taille)
+{
+	return dialogue_generique(dialogue,NULL,NULL,ACCUEIL_CODE,erreur,taille);
 }
 
 static inline int dialogue_QUIT(FILE *dialogue,char *erreur,int taille){
@@ -208,6 +220,7 @@ return dialogue_generique(dialogue,"RCPT TO:",destinataire,SUCCES_RCPT_CODE,erre
 
 static int dialogue_DATA(FILE *dialogue,char *corps,char *erreur,int taille){
 if(fprintf(dialogue,"DATA\r\n")<0) return -1;
+// FAIRE APPEL A DIALOGUE_GENERIQUE POUR ENVOYER DATA AVANT D'ENVOYER LE CORPS ET LE POINT
 if(fprintf(dialogue,corps)<0) return -1;
 if(fprintf(dialogue,".\r\n")<0) return -1;
 return retour_generique(dialogue,SUCCES_DATA_CODE,erreur,taille);
