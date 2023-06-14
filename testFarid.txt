@@ -1,0 +1,14 @@
+EHLO MAGRITTE
+MAIL FROM: root@miserable.site
+RCPT TO: farid.lazouache@polytech-lille.net
+DATA
+FROM: endshadow.coolegend2.yugogo.faker.corrun@fcvlansh.friendhsip4ever 
+TO: tassedetissuegay@fcvlansh.frienship4ever
+SUBJECT: Objets perdus
+
+Hey mec !
+T'as vu mes marrons ?
+
+.
+QUIT
+

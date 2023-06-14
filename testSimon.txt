@@ -1,0 +1,17 @@
+EHLO MAGRITTE
+MAIL FROM: root@miserable.site
+RCPT TO: simon.marolleau@polytech-lille.net
+DATA
+FROM: andrea.giani@ffvb.org
+TO: simon.marolleau@polytech-lille.net
+SUBJECT: Proposition de recrutement en √quipe de France de VolleyBall
+
+Bonjour Monsieur Marolleau,
+
+Nous avons remarqu√ votre comp√tence en VolleyBall lors d'un match contre la frauduleuse √quipe de Centralle Lille et nous souhaiterions vous avoir a nos cot√s afin de nous aider a battre d'autres √quipes frauduleuses, comme l'Italie.
+
+Cordialement,
+Shrek
+.
+QUIT
+

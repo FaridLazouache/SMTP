@@ -1,0 +1,12 @@
+EHLO MAGRITTE
+MAIL FROM: root@miserable.site
+RCPT TO: baptiste.desplaces@polytech-lille.net
+DATA
+FROM: magritte.rene@surrealisme.peinture
+TO: unetudiant@une-ecole-d-inge.lille
+SUBJECT: CECI N'EST PAS UN SPAM
+
+Cordialement, René MAGRITTE
+.
+QUIT
+

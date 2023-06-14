@@ -28,6 +28,7 @@
 
 void gestionCourriel(struct courriel *donnees,void *supplement){
 #ifdef DEVERMINE
+printf("\nEntré dans gestionCourriel\n");
 afficheCourriel(stdout,donnees,0);
 #endif
 char *domaine=malloc(strlen(donnees->destinataire));
@@ -39,10 +40,10 @@ for(i=0;i<strlen(donnees->destinataire);i++){
   if(donnees->destinataire[i]=='@') mode=1;
   }
 domaine[j]='\0';
-if(mode!=1){ free(domaine); return; }
 #ifdef DEVERMINE
 printf("Domaine : %s\n",domaine);
 #endif
+if(mode!=1){ free(domaine); return; }
 char **lesmx=chercherMX(domaine);
 if(lesmx!=NULL) free(domaine);
 else{
@@ -55,6 +56,9 @@ while(*p!=NULL){
   printf("Serveur : %s\n",*p);
 #endif
   int ss=connexionServeur(*p,SMTP_PORT_DEFAULT);
+#ifdef DEVERMINE
+  printf("\nss = %d\n", ss);
+#endif
   if(ss == -1)
   {
     ecritureJournal(JOURNIV_ERREUR, JOURNAL_ERREUR);
@@ -67,9 +71,16 @@ while(*p!=NULL){
   }
   char erreur[MAX_ERREUR];
   int resultat=SMTP_dialogue(dialogue,donnees,erreur,MAX_ERREUR);
+#ifdef DEVERMINE
+  	printf("\nresultat = %d\n", resultat);
+#endif
   if(resultat<0) ecritureJournal(JOURNIV_DEVERMINE,JOURNAL_MXHS,*p);
+  else break;
   // Logguer l'erreur
   fclose(dialogue);
+#ifdef DEVERMINE
+  printf("\np = %s", *p);
+#endif
   p++;
   }
 }
@@ -78,17 +89,28 @@ while(*p!=NULL){
 
 void _fluxGestionSMTP(void *arg){
 int sd=*(int *)arg;
+#ifdef DEVERMINE
+  		printf("\nFlux gestion : sd = %d\n", sd);
+#endif
+
 FILE *dialogue=fdopen(sd,"a+");
 if(dialogue==NULL){
   perror("fluxGestionSMTP.fdopen");
+	#ifdef DEVERMINE
+  		printf("\nCan't open dialogue\n");
+	#endif
   exit(EXIT_FAILURE);
   }
 SMTP_gestion(dialogue,gestionCourriel,NULL);
 }
 
-int fluxGestionSMTP(int sd){
-lancerFlux(_fluxGestionSMTP,&sd,sizeof(int));
-return 0;
+int fluxGestionSMTP(int sd)
+{
+	#ifdef DEVERMINE
+	printf("sd = %d", sd);
+	#endif
+	lancerFlux(_fluxGestionSMTP,&sd,sizeof(int));
+	return 0;
 }
 
 // Fonction principale
@@ -96,6 +118,9 @@ return 0;
 int main(int argc,char *argv[]){
 char *interface=NULL;
 struct smtp_config config;
+#ifdef DEVERMINE
+	printf("\nanalyseArguments\n");
+#endif
 analyseArguments(argc,argv,&config);
 if(config.journal[0]!='\0') creationJournal(config.journal);
 niveauJournal(config.niveau);
@@ -107,12 +132,24 @@ printf("Port : %s\n",config.port);
 if(interface!=NULL) printf("Interface : %s\n",interface);
 #endif
 int s=initialisationServeur(config.port,TAILLE_FILE,interface);
+#ifdef DEVERMINE
+	printf("s = %d", s);
+#endif
 if(s<0){
   fprintf(stderr,"Impossible d'occuper le port %s\n",config.port);
   exit(EXIT_FAILURE);
   }
+#ifdef DEVERMINE
+	printf("\nboucleServeur\n");
+#endif
 boucleServeur(s,fluxGestionSMTP);
+#ifdef DEVERMINE
+	printf("\necritureJournal\n");
+#endif
 ecritureJournal(JOURNIV_INFO,JOURNAL_FIN);
+#ifdef DEVERMINE
+	printf("\nfermetureJournal\n");
+#endif
 fermetureJournal();
 return 0;
 }

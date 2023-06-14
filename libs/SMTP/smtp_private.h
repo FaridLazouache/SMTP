@@ -1,6 +1,6 @@
 // Constantes
 
-#define ACCUEIL_CODE		250
+#define ACCUEIL_CODE		220
 #define ACCUEIL_TEXTE		"Welcome"
 
 #define ERREUR_SYNTAXE		"Syntax error"
@@ -10,11 +10,11 @@
 #define ERREUR_MAIL_CODE	501
 #define ERREUR_MAIL_TEXTE	ERREUR_SYNTAXE
 #define ERRORD_MAIL_CODE	503
-#define ERRORD_MAIL_TEXTE	"Need HELO first"
+#define ERRORD_MAIL_TEXTE	"Need EHLO first"
 #define ERREUR_RCPT_CODE	501
 #define ERREUR_RCPT_TEXTE	ERREUR_SYNTAXE
 #define ERRORD_RCPT_CODE	503
-#define ERRORD_RCPT_TEXTE	"Need HELO first"
+#define ERRORD_RCPT_TEXTE	"Need EHLO first"
 #define ERREUR_DATA_CODE	501
 #define ERREUR_DATA_TEXTE	ERREUR_SYNTAXE
 #define ERRORD_DATA_CODE	503

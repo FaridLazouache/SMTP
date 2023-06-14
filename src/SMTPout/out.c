@@ -95,7 +95,7 @@ while(adresses[i].id!=NULL){
 char *scanCarteUtilisateur(char *courriel){
 int i=0;
 while(adresses[i].id!=NULL){
-  if(strcasecmp(adresses[i].adresse,courriel)) return adresses[i].id;
+  if(strcasecmp(adresses[i].adresse,courriel) == 0) return adresses[i].id;
   i++;
   }
 return NULL;
@@ -127,7 +127,7 @@ char *adresseVersUtilisateur(char *destinataire){
 char *adresse=malloc(strlen(destinataire));
 int i,j=0;;
 unsigned char mode=0;
-for(i=0;i<strlen(adresse);i++){
+for(i=0;i<strlen(destinataire);i++){
   if(destinataire[i]=='>') break;
   if(mode==1) adresse[j++]=destinataire[i];
   if(destinataire[i]=='<') mode=1;

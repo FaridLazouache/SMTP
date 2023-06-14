@@ -65,15 +65,29 @@ if(statut<0){ shutdown(s,SHUT_RDWR); return -2; }
 return s;
 }
 
-int boucleServeur(int ecoute,int (*traitement)(int)){
-int dialogue;
-while(1){
-    /* Attente d'une connexion */
-    if((dialogue=accept(ecoute,NULL,NULL))<0) return -1;
+int boucleServeur(int ecoute,int (*traitement)(int))
+{
+	#ifdef DEVERMINE
+		printf("\nEntré dans boucleServeu\n");
+	#endif
+	int dialogue;
+	while(1)
+	{
+   		/* Attente d'une connexion */
+    	if((dialogue=accept(ecoute,NULL,NULL))<0) return -1;
+		#ifdef DEVERMINE
+			printf("\ndialogue = %d\n", dialogue);
+		#endif
 
-    /* Passage de la socket de dialogue a la fonction de traitement */
-    if(traitement(dialogue)<0){ shutdown(ecoute,SHUT_RDWR); return 0;}
-    }
+    	/* Passage de la socket de dialogue a la fonction de traitement */
+    	if(traitement(dialogue)<0)
+		{ 
+			#ifdef DEVERMINE
+				printf("\ntraitement(dialogue)\n");
+			#endif
+			shutdown(ecoute,SHUT_RDWR); return 0;
+		}
+	}
 }
 
 int connexionServeur(char *hote,char *service){
@@ -95,8 +109,8 @@ while(1){
     { freeaddrinfo(origine); return -1; }
   if(p==NULL) p=origine;
   if((ipv6==0 && p->ai_family==AF_INET6) || (ipv6==1 && ipv4==0 && p->ai_family==AF_INET)){
-#ifdef DEBUG
-    fprintf(stderr,"Connexion sur "%s" ipv6=%d ipv4=%d famille=%d\n",hote,ipv6,ipv4,p->ai_family);
+#ifdef DEVERMINE
+    fprintf(stderr,"Connexion sur %s ipv6=%d ipv4=%d famille=%d\n",hote,ipv6,ipv4,p->ai_family);
 #endif
     }
     /* Creation d'une socket */
@@ -105,7 +119,13 @@ while(1){
 
     /* Connection de la socket a l'hote */
     if(connect(s,p->ai_addr,p->ai_addrlen)==0) break;
-    }
+	if(p->ai_family==AF_INET6) ipv6 = 1;
+	if(p->ai_family==AF_INET) ipv4 = 1;
+	p = p->ai_next;
+}
+#ifdef DEVERMINE
+	fprintf(stderr, "Sortie du while(1) de connexionServeur");
+#endif
 
 /* Liberation de la structure d'informations */
 freeaddrinfo(origine);

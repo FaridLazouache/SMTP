@@ -1,0 +1,10 @@
+EHLO MAGRITTE
+MAIL FROM: <root@miserable.site>
+RCPT TO: <lazouache.farid@gmail.com>
+DATA
+SUBJECT: CECI N'EST PAS UN SPAM
+
+Cordialement, René MAGRITTE
+.
+QUIT
+

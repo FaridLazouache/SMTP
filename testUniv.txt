@@ -1,0 +1,13 @@
+EHLO MAGRITTE
+MAIL FROM: root@miserable.site
+RCPT TO: farid.lazouache@univ-lille.fr
+DATA
+FROM: simon@farid.william 
+TO: farid.lazouache@polytech-lille.net
+SUBJECT: CECI N'EST PAS UN SPAM
+
+
+Cordialement, René MAGRITTE
+.
+QUIT
+
