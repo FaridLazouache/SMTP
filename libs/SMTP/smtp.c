@@ -83,11 +83,17 @@ char cmd[MAX_LIGNE];
 char tag[MAX_LIGNE];
 char arg[MAX_LIGNE];
 char suite[MAX_LIGNE];
+char format[MAX_LIGNE];
 int statut=sscanf(ligne,"%4s %s %s %s",cmd,tag,arg,suite);
 if(statut!=3 || strcasecmp(tag,RCPT_TAG)!=0){
-  if(fprintf(client,"%03d %s\r\n",ERREUR_RCPT_CODE,ERREUR_RCPT_TEXTE)<0) return GESTION_STOP;
-  return GESTION_ERREUR;
-  }
+	sprintf(format, "%%4s %s%%s %%s", RCPT_TAG);
+	int statut2=sscanf(ligne, format, cmd, arg, suite);
+		if(statut2!=2)
+		{
+  			if(fprintf(client,"%03d %s\r\n",ERREUR_RCPT_CODE,ERREUR_RCPT_TEXTE)<0) return GESTION_STOP;
+  		return GESTION_ERREUR;
+  		}
+}
 if(donnees->hello[0]=='\0'){
   if(fprintf(client,"%03d %s\r\n",ERRORD_RCPT_CODE,ERRORD_RCPT_TEXTE)<0) return GESTION_STOP;
   return GESTION_ERREUR;
