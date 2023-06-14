@@ -46,16 +46,29 @@ char cmd[MAX_LIGNE];
 char tag[MAX_LIGNE];
 char arg[MAX_LIGNE];
 char suite[MAX_LIGNE];
+char format[MAX_LIGNE];
 int statut=sscanf(ligne,"%4s %s %s %s",cmd,tag,arg,suite);
-int statut2 = sscanf(ligne, "%4s %s%s%s", cmd, tag, arg, suite);
+#ifdef DEVERMINE
+	printf("\nstatut = %d\n", statut);
+#endif
 if(statut!=3 || strcasecmp(tag,MAIL_TAG)!=0){
-  if(fprintf(client,"%03d %s\r\n",ERREUR_MAIL_CODE,ERREUR_MAIL_TEXTE)<0) return GESTION_STOP;
-  return GESTION_ERREUR;
-  }
-if(statut2!=3 || strcasecmp(tag,MAIL_TAG + ' ')!=0){
-  if(fprintf(client,"%03d %s\r\n",ERREUR_MAIL_CODE,ERREUR_MAIL_TEXTE)<0) return GESTION_STOP;
-  return GESTION_ERREUR;
-  }
+
+  	sprintf(format,"%%4s %s%%s %%s", MAIL_TAG);
+#ifdef DEVERMINE
+	printf("\nformat = %s\n", format);
+#endif
+	int statut2=sscanf(ligne,format,cmd,arg,suite);
+#ifdef DEVERMINE
+	printf("\nstatut2 = %d\n", statut2);
+#endif
+	if(statut2 !=2){ 
+		if(fprintf(client,"%03d %s\r\n",ERREUR_MAIL_CODE,ERREUR_MAIL_TEXTE)<0) return GESTION_STOP;
+#ifdef DEVERMINE
+		printf("\nclient = %s\n", client);
+#endif
+  		return GESTION_ERREUR;}
+}
+  
 if(donnees->hello[0]=='\0'){
   if(fprintf(client,"%03d %s\r\n",ERRORD_MAIL_CODE,ERRORD_MAIL_TEXTE)<0) return GESTION_STOP;
   return GESTION_ERREUR;
